@@ -1,4 +1,5 @@
 import re
+import time
 
 char_mapping = {
     'ა': 'a',
@@ -49,7 +50,7 @@ def tokenize(s):
 
 
 def remove_stopwords(tokens):
-    return list(filter(lambda token: token not in stopwords, tokens))
+    return set(filter(lambda token: token not in stopwords, tokens))
 
 
 def transliterate(s):
@@ -70,3 +71,10 @@ def normalize(s):
 def normalize_and_tokenize(s):
     tokens = tokenize(s)
     return remove_stopwords(tokens)
+
+
+if __name__ == '__main__':
+    start_time = time.time()
+    normalize_and_tokenize('Mr.  Giga  (როინის ძე)  Kokaia.')
+    end_time = time.time()
+    print(end_time - start_time)
