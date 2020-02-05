@@ -1,0 +1,8 @@
+version: '3'
+services:
+  flask:
+    container_name: 'name-matching'
+    build: .
+    image: name-matching
+    ports:
+      - 3000:3000

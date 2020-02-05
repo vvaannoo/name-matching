@@ -1,6 +1,6 @@
 python-levenshtein
 pandas
 numpy
-metaphone
+# metaphone
 flask
 matplotlib
