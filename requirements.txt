@@ -1,3 +1,5 @@
 python-levenshtein
 pandas
 numpy
+metaphone
+flask
