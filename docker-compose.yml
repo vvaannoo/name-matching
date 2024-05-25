@@ -1,8 +1,8 @@
-version: '3'
+version: '3.9'
 services:
-  flask:
-    container_name: 'name-matching'
+  app:
+    container_name: 'person-similarity-api'
     build: .
-    image: name-matching
+    image: person-similarity-api
     ports:
-      - 3000:3000
+      - "8000:8000"

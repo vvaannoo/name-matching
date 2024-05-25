@@ -1,6 +1,5 @@
 python-levenshtein
-pandas
-numpy
+fastapi
+uvicorn[standard]
 # metaphone
 flask
-matplotlib

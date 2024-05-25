@@ -1,58 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<title>test name matching</title>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-	<style>
-		.container {
-			max-width: 1000px;
-			width: 60%;
-			margin: auto
-		}
+    <meta charset="UTF-8">
+    <title>test name matching</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <style>
+        .container {
+            max-width: 1000px;
+            width: 60%;
+            margin: auto
+        }
 
-		form > .fieldset {
-			display: flex;
-		}
+        form > .fieldset {
+            display: flex;
+        }
 
-		input {
-			border: 1px solid #cccccc;
-			width: 90%;
-			padding: 10px;
-		}
+        input {
+            border: 1px solid #cccccc;
+            width: 90%;
+            padding: 10px;
+        }
 
-		button {
-			margin: auto;
-			display: block;
-			border: 1px solid #cccccc;
-			padding: 10px;
-		}
+        button {
+            margin: auto;
+            display: block;
+            border: 1px solid #cccccc;
+            padding: 10px;
+        }
 
-		label {
-			width: 300px;
-			display: flex;
-			flex-direction: column;
-			margin: 5px;
-			font-size: 10pt;
-		}
+        label {
+            width: 300px;
+            display: flex;
+            flex-direction: column;
+            margin: 5px;
+            font-size: 10pt;
+        }
 
-		.results {
-			font-family: monospace;
-		}
-		.results .score-table{
-			width: 600px;
-			border-collapse: collapse;
-		}
-		.results .score-table td, .results .score-table th{
-			text-align: left;
-			border-bottom: 1px solid #cccccc;
-		}
-	</style>
-	<script>
-		function submitForm(form) {
-			$.getJSON('/scores', getFormData(form), function (res) {
-				$('.results').html(
-					`<h1>score: ${res['score'].toFixed(4)}</h1><br><hr>
+        .results {
+            font-family: monospace;
+        }
+
+        .results .score-table {
+            width: 600px;
+            border-collapse: collapse;
+        }
+
+        .results .score-table td, .results .score-table th {
+            text-align: left;
+            border-bottom: 1px solid #cccccc;
+        }
+    </style>
+    <script>
+        function submitForm(form) {
+            const values = getFormData(form);
+            const data = {
+                person1: {
+                    name: values.name1,
+                    birth_date: values.birth_date1
+                },
+                person2: {
+                    name: values.name2,
+                    birth_date: values.birth_date2
+                }
+            };
+            $.ajax({
+                type: 'POST',
+                url: '/api/compare',
+                data: JSON.stringify(data),
+                success: function (res) {
+                    $('.results').html(
+                            `<h1>score: ${res['score'].toFixed(4)}</h1><br><hr>
 					<table class="score-table">
 					<tr>
 					<th>name score</th>
@@ -61,55 +78,56 @@
 					<th>day score</th>
 					</tr>
 					<tr>
-					<td>${res['name-score'].toFixed(4)}</td>
-					<td>${res['year-score'].toFixed(4)}</td>
-					<td>${res['month-score'].toFixed(4)}</td>
-					<td>${res['day-score'].toFixed(4)}</td>
+					<td>${res['name_score'].toFixed(4)}</td>
+					<td>${res['year_score'].toFixed(4)}</td>
+					<td>${res['month_score'].toFixed(4)}</td>
+					<td>${res['day_score'].toFixed(4)}</td>
 					</tr>
 					</table>
 					`
-				);
-				console.log(res)
-			})
-		}
+                    );
+                },
+                dataType: 'json',
+                contentType: 'application/json',
+            });
+        }
 
-		function getFormData(form) {
-			const unindexed_array = $(form).serializeArray();
-			const indexed_array = {};
+        function getFormData(form) {
+            const unindexed_array = $(form).serializeArray();
+            const indexed_array = {};
 
-			$.map(unindexed_array, function (n, i) {
-				indexed_array[n['name']] = n['value'];
-			});
-
-			return indexed_array;
-		}
-	</script>
+            $.map(unindexed_array, function (n, i) {
+                indexed_array[n['name']] = n['value'];
+            });
+            return indexed_array;
+        }
+    </script>
 </head>
 <body>
 <div class="container">
-	<form id="form" action="/scores" onsubmit="submitForm(this); return false;">
-		<div class="fieldset">
-			<label>
-				სახელი
-				<input type="text" name="name1" required value="Franklin D. Roosevelt">
-			</label>
-			<label style="width: 100px">
-				დაბ. თარიღი
-				<input type="text" name="birth_date1" required value="1882-01-30" placeholder="YYYY-MM-DD">
-			</label>
-			<div style="flex: 1"></div>
-			<label>
-				სახელი
-				<input type="text" name="name2" required value="ფრანკლინ დელანო რუზველტი">
-			</label>
-			<label style="width: 100px">
-				დაბ. თარიღი
-				<input type="text" name="birth_date2" required value="1882-01-30" placeholder="YYYY-MM-DD">
-			</label>
-		</div>
-		<br>
-		<button type="submit">Submit</button>
-	</form>
+    <form id="form" action="/scores" onsubmit="submitForm(this); return false;">
+        <div class="fieldset">
+            <label>
+                სახელი
+                <input type="text" name="name1" required value="Franklin D. Roosevelt">
+            </label>
+            <label style="width: 100px">
+                დაბ. თარიღი
+                <input type="text" name="birth_date1" required value="1882-01-30" placeholder="YYYY-MM-DD">
+            </label>
+            <div style="flex: 1"></div>
+            <label>
+                სახელი
+                <input type="text" name="name2" required value="ფრანკლინ დელანო რუზველტი">
+            </label>
+            <label style="width: 100px">
+                დაბ. თარიღი
+                <input type="text" name="birth_date2" required value="1882-01-30" placeholder="YYYY-MM-DD">
+            </label>
+        </div>
+        <br>
+        <button type="submit">Calculate score</button>
+    </form>
 </div>
 <div class="results">
 
